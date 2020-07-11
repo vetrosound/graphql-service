@@ -1,0 +1,8 @@
+type Room {
+  id: Int!
+  members: [User!]!
+}
+
+type Query {
+  room(id: Int!): Room
+}
