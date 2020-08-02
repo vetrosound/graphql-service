@@ -1,0 +1,28 @@
+dist: bionic
+language: node_js
+node_js:
+  - 12
+cache:
+  yarn: true
+  directories:
+    - ~/.cache
+
+branches:
+  only:
+    - master
+
+install:
+  - yarn
+
+script:
+  - yarn lint
+  - yarn build
+  - yarn test
+  - yarn test:e2e
+
+notifications:
+  slack:
+    on_success: always
+    on_failure: change
+    rooms:
+      - secure: VifPWHmeni0A4RfJxUEdaE+HpmSep4lK883ZYNGXBRwDUJER+gn1AfFyp2a7iQi5OpAyMRiblNBMLpRB8Y7gdezaSL7A+KaWUH7JDSHBperA/fLqzj5smVl/Yi5RFzFStC7raQA00mcLfqEva2fUcg0Q5N6j0uUvDUPS933TKJnbz9YoTbcHEU4uQIZL4UNXet8MX5ahUBSek8NArd/vLfcbUmOwZ5CniNCrebcPW5jUG9Ai94fk4+XzsKO3q8jKU6uy8XG1KMVbJv85M+eQUd8GnTm+mL0xEDAR1oaRI/ZldfszbbffUJuhXTXaz+lkYWueTe0laBhBo+AKX/AWvXDxM1ZmFTxwlxK5sf8LNIfvv/ABAM22wd5XNS4ALLeDT1fX4Z68MyC6YuhNUBY4k25Ud9efSuBRsWcRU3DD6Xk/qhmYLmagmY7DTCLwGc6fJXRXuCb4jCe/nj5aKXffX0ctc6h8D4LrEZ7t6Qs98Jg5G5tvYmDq382Mii8RpFX3jjHZVOHSt3dpflOl6des8ho74uDKMsBicmcr8OPEx6CB5+jcdqri1pYWBC6kLwJvu8NjV4YkLmY/HQE+hZDJR5dbBVb3ifFpwqy7BN8844islVuTkBjwAXyGKw4+rm0/nFNpSmdFJfOU7YjZXr+1XTOTsfGRUTvYCyx0MMjoz1w=

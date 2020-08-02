@@ -1,6 +1,6 @@
 type Room {
   id: Int!
-  members: [User!]!
+  members(roomId: Int!): [User!]!
 }
 
 type Query {

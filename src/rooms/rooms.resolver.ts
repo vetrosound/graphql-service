@@ -1,21 +1,20 @@
 import { Resolver, ResolveField, Query, Args } from '@nestjs/graphql';
 import { RoomsService } from './rooms.service';
-import { UsersService } from 'src/users/users.service';
+import { Room, User } from '../graphql.schema';
+import { Observable } from 'rxjs';
+import { toArray } from 'rxjs/operators';
 
 @Resolver('Room')
 export class RoomsResolver {
-  constructor(
-    private roomsService: RoomsService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private roomsService: RoomsService) {}
 
   @Query('room')
-  async getRoom(@Args('id') id: number) {
+  getRoom(@Args('id') id: number): Observable<Room> {
     return this.roomsService.findOneById(id);
   }
 
   @ResolveField('members')
-  async getUser(@Args('id') id: number) {
-    return [this.usersService.findOneById(id)];
+  getMembers(@Args('roomId') roomId: number): Observable<User[]> {
+    return this.roomsService.findMembersByRoomId(roomId).pipe(toArray());
   }
 }
