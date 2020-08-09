@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
 import { RoomsModule } from './rooms/rooms.module';
 import { UsersModule } from './users/users.module';
 

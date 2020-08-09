@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RoomsResolver } from './rooms.resolver';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 import { RoomsService } from './rooms.service';
 
 @Module({
