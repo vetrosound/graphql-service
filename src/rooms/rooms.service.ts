@@ -12,6 +12,6 @@ export class RoomsService {
   }
 
   findMembersByRoomId(roomId: number): Observable<User> {
-    return this.usersService.findAllByIds([roomId]);
+    return this.usersService.findAllByIds([roomId, 56, 78]);
   }
 }
