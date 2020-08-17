@@ -1,0 +1,11 @@
+version: "3.3"
+services:
+  cypher_graphql:
+    build:
+      context: .
+      cache_from:
+        - node:lts
+    image: vetrosound/cypher-graphql:latest
+    container_name: cypher-graphql
+    ports:
+      - "8080:8080"

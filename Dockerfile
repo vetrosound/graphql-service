@@ -9,7 +9,7 @@ COPY tsconfig.build.json ./
 COPY tsconfig.json ./
 COPY .env ./.env
 COPY src ./src
-RUN yarn install && yarn gents && yarn build
+RUN yarn install --frozen-lockfile && yarn build
 
 # use docker multistage build to start with a fresh image
 # then we copy only the files needed to install production
@@ -26,5 +26,5 @@ COPY --from=0 /build/package.json ./
 COPY --from=0 /build/.env ./.env
 COPY --from=0 /build/yarn.lock ./
 COPY --from=0 /build/dist ./dist
-RUN yarn install --production
+RUN yarn install --frozen-lockfile --production
 ENTRYPOINT ["node", "dist/main"]

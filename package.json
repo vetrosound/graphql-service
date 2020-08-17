@@ -6,7 +6,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf dist && yarn gents",
+    "prebuild": "rimraf dist && yarn gents && yarn schema",
+    "schema": "mkdir -p dist/schema && find src -name '*.graphql' -exec cp {} dist/schema/ \\;",
     "gents": "ts-node src/generate-typings",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
