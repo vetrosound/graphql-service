@@ -23,18 +23,19 @@ $ yarn start:prod
 # unit tests
 $ yarn test
 
+# run tests with changes
+$ yarn test:watch
+
 # e2e tests
 $ yarn test:e2e
-
-# test coverage
-$ yarn test:cov
 ```
 
-## Building and running the docker image
+## Working with docker (docker-compose must be installed)
 
-`docker-compose up -d`
-
-Cleanup intermediate images
-`docker image prune -f`
+### Build and Run
+`yarn docker:build:run`
 
 Then visit `http://localhost:8080/graphql` in a browser.
+
+### Stop
+`yarn docker:stop`

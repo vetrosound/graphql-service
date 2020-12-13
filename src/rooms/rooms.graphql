@@ -1,8 +1,37 @@
 type Room {
-  id: Int!
-  members(roomId: Int!): [User!]!
+  name: String
+  owner: String
+  type: String
+  managers: [String]
+  created: String
+  lastUpdated: String
+  isActive: Boolean
+}
+
+input CreateRoomInput {
+  name: String!
+  owner: String!
+  type: String
+  managers: [String]
+  created: String
+  lastUpdated: String
+  isActive: Boolean
+}
+
+input UpdateRoomInput {
+  name: String!
+  owner: String
+  type: String
+  managers: [String]
+  isActive: Boolean
 }
 
 type Query {
-  room(id: Int!): Room
+  getRoom(name: String!): Room
+}
+
+type Mutation {
+  createRoom(room: CreateRoomInput): Room
+  updateRoom(roomWithUpdates: UpdateRoomInput): Int
+  deleteRoom(name: String): Int
 }

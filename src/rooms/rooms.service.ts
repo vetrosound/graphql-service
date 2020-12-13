@@ -1,17 +1,64 @@
-import { Injectable } from '@nestjs/common';
-import { Room, User } from '../graphql.schema';
-import { Observable, of } from 'rxjs';
-import { UsersService } from '../users/users.service';
+import {
+  Injectable,
+  HttpService,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { Room, CreateRoomInput, UpdateRoomInput } from '../graphql.schema';
 
 @Injectable()
 export class RoomsService {
-  constructor(private usersService: UsersService) {}
+  private roomsBaseUrl: string;
 
-  findOneById(id: number): Observable<Room> {
-    return of({ id } as Room);
+  constructor(private httpService: HttpService, private config: ConfigService) {
+    this.roomsBaseUrl = `${this.config.get<string>('ROOMS_BASE_URL')}/rooms`;
   }
 
-  findMembersByRoomId(roomId: number): Observable<User> {
-    return this.usersService.findAllByIds([roomId, 56, 78]);
+  findRoomByName(roomName: string): Observable<Room> {
+    return this.httpService.get(`${this.roomsBaseUrl}/${roomName}`).pipe(
+      map(response => {
+        if (response.status >= HttpStatus.BAD_REQUEST) {
+          throw new HttpException(response.statusText, response.status);
+        }
+        return response.data;
+      }),
+    );
+  }
+
+  createRoom(room: CreateRoomInput): Observable<Room> {
+    return this.httpService.post(this.roomsBaseUrl, room).pipe(
+      map(response => {
+        if (response.status >= HttpStatus.BAD_REQUEST) {
+          throw new HttpException(response.statusText, response.status);
+        }
+        return response.data;
+      }),
+    );
+  }
+
+  updateRoom(withUpdates: UpdateRoomInput): Observable<number> {
+    return this.httpService.put(this.roomsBaseUrl, withUpdates).pipe(
+      map(response => {
+        if (response.status >= HttpStatus.BAD_REQUEST) {
+          throw new HttpException(response.statusText, response.status);
+        }
+        return response.data;
+      }),
+    );
+  }
+
+  deleteRoom(roomName: string): Observable<number> {
+    return this.httpService.delete(`${this.roomsBaseUrl}/${roomName}`).pipe(
+      map(response => {
+        if (response.status >= HttpStatus.BAD_REQUEST) {
+          throw new HttpException(response.statusText, response.status);
+        }
+        return response.data;
+      }),
+    );
   }
 }
