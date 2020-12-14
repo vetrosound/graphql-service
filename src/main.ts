@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { LogLevel, ValidationPipe } from '@nestjs/common';
+import { LogLevel } from '@nestjs/common';
 
 import { RootModule } from './root.module';
 
@@ -10,7 +10,6 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const serverPort = config.get<number>('SERVER_PORT');
   const serverInterface = config.get<string>('SERVER_INTERFACE');
-  app.useGlobalPipes(new ValidationPipe());
   await app.listen(serverPort, serverInterface);
 }
 bootstrap();

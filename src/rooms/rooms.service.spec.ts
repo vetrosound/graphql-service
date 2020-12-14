@@ -1,52 +1,92 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoomsService } from './rooms.service';
-import { UsersService } from '../users/users.service';
-import { User } from 'src/graphql.schema';
+import { Room } from 'src/graphql.schema';
 import { of } from 'rxjs';
-import { toArray } from 'rxjs/operators';
 
 describe('RoomsService', () => {
-  let roomsService: RoomsService;
-  let usersService: UsersService;
-  const mockId = 1234;
-  const mockUser: User = {
-    id: mockId,
-    firstName: 'john',
-    lastName: 'smith',
+  let service: RoomsService;
+  const mockRoom: Room = {
+    name: 'test-room',
+    owner: '1234',
+    type: 'paid',
+    managers: ['1234'],
+    created: new Date().toString(),
+    lastUpdated: new Date().toString(),
+    isActive: true,
+  };
+  const createRoomInput = { name: mockRoom.name, owner: mockRoom.owner };
+  const updateRoomInput = { name: mockRoom.name };
+  const mockRoomResponse = {
+    status: 200,
+    statusText: 'mock error message',
+    data: mockRoom,
+  };
+  const mockCountResponse = {
+    status: 200,
+    statusText: 'mock error message',
+    data: 1,
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RoomsService, UsersService],
+      providers: [
+        RoomsService,
+        {
+          provide: 'HttpService',
+          useValue: {
+            get: () => of(mockRoomResponse),
+            post: () => of(mockRoomResponse),
+            put: () => of(mockCountResponse),
+            delete: () => of(mockCountResponse),
+          },
+        },
+        {
+          provide: 'ConfigService',
+          useValue: { get: jest.fn() },
+        },
+      ],
     }).compile();
 
-    roomsService = module.get<RoomsService>(RoomsService);
-    usersService = module.get<UsersService>(UsersService);
+    service = module.get<RoomsService>(RoomsService);
   });
 
   it('should be defined', () => {
-    expect(roomsService).toBeDefined();
+    expect(service).toBeDefined();
   });
 
-  describe('findOneById', () => {
+  describe('findRoomById', () => {
     it('should return expected room', done => {
-      roomsService.findOneById(mockId).subscribe(result => {
-        expect(result).toStrictEqual({ id: mockId });
+      service.findRoomByName(mockRoom.name).subscribe(result => {
+        expect(result).toStrictEqual(mockRoom);
         done();
       });
     });
   });
 
-  describe('findMembersByRoomId', () => {
-    it('should return the expected members', done => {
-      spyOn(usersService, 'findAllByIds').and.returnValue(of(mockUser));
-      roomsService
-        .findMembersByRoomId(mockId)
-        .pipe(toArray())
-        .subscribe(result => {
-          expect(result).toStrictEqual([mockUser]);
-          done();
-        });
+  describe('createRoom', () => {
+    it('should return expected room', done => {
+      service.createRoom(createRoomInput).subscribe(result => {
+        expect(result).toStrictEqual(mockRoom);
+        done();
+      });
+    });
+  });
+
+  describe('updateRoom', () => {
+    it('should return expected room', done => {
+      service.updateRoom(updateRoomInput).subscribe(result => {
+        expect(result).toStrictEqual(1);
+        done();
+      });
+    });
+  });
+
+  describe('deleteRoom', () => {
+    it('should return expected room', done => {
+      service.deleteRoom(mockRoom.name).subscribe(result => {
+        expect(result).toStrictEqual(1);
+        done();
+      });
     });
   });
 });

@@ -1,11 +1,67 @@
 version: "3.3"
 services:
-  cypher_graphql:
+  graphql:
+    image: "vetrosound/graphql-service:latest"
+    container_name: "graphql-service"
+    restart: "always"
     build:
       context: .
       cache_from:
-        - node:lts
-    image: vetrosound/cypher-graphql:latest
-    container_name: cypher-graphql
+        - "node:alpine"
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - "people"
+      - "rooms"
+    links:
+      - "people"
+      - "rooms"
+    networks:
+      - "vetrosound"
+    environment:
+      - "PEOPLE_BASE_URL=http://people:8081"
+      - "ROOMS_BASE_URL=http://rooms:8082"
+  people:
+    image: "vetrosound/people-service:latest"
+    container_name: "people-service"
+    restart: "always"
+    ports:
+      - "127.0.0.1:8081:8081"
+    depends_on:
+      - "mongo"
+    links:
+      - "mongo"
+    networks:
+      - "vetrosound"
+    environment:
+      - "MONGO_URL=mongodb://mongo"
+      - "SERVER_PORT=8081"
+  rooms:
+    image: "vetrosound/rooms-service:latest"
+    container_name: "rooms-service"
+    restart: "always"
+    ports:
+      - "127.0.0.1:8082:8082"
+    depends_on:
+      - "mongo"
+    links:
+      - "mongo"
+    networks:
+      - "vetrosound"
+    environment:
+      - "MONGO_URL=mongodb://mongo"
+      - "SERVER_PORT=8082"
+  mongo:
+    image: "mongo:bionic"
+    container_name: "mongo"
+    restart: "always"
+    ports:
+      - "127.0.0.1:27017:27017"
+    networks:
+      - "vetrosound"
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=admin"
+      - "MONGO_INITDB_ROOT_PASSWORD=password"
+
+networks:
+  vetrosound:

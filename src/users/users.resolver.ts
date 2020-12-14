@@ -1,14 +1,32 @@
-import { Resolver, Args, Query } from '@nestjs/graphql';
-import { UsersService } from './users.service';
-import { User } from '../graphql.schema';
+import { Resolver, Args, Query, Mutation } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 
-@Resolver('User')
+import { UsersService } from './users.service';
+import { User, CreateUserInput, UpdateUserInput } from '../graphql.schema';
+
+@Resolver('Users')
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
 
-  @Query('user')
-  getUser(@Args('id') id: number): Observable<User> {
-    return this.usersService.findOneById(id);
+  @Query('getUser')
+  getUser(@Args('id') id: string): Observable<User> {
+    return this.usersService.findUserById(id);
+  }
+
+  @Mutation('createUser')
+  createUser(@Args('user') user: CreateUserInput): Observable<User> {
+    return this.usersService.createUser(user);
+  }
+
+  @Mutation('updateUser')
+  updateUser(
+    @Args('userWithUpdates') userWithUpdates: UpdateUserInput,
+  ): Observable<number> {
+    return this.usersService.updateUser(userWithUpdates);
+  }
+
+  @Mutation('deleteUser')
+  deleteUser(@Args('id') id: string): Observable<number> {
+    return this.usersService.deleteUser(id);
   }
 }
