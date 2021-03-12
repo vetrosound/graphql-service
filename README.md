@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/vetrosound/graphql-service.svg?branch=main)](https://travis-ci.com/vetrosound/graphql-service)
+
 ## Installation
 
 ```bash
