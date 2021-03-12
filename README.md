@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.com/vetrosound/graphql-service.svg?branch=main)](https://travis-ci.com/vetrosound/graphql-service)
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vetrosound-graphql-service&metric=alert_status)](https://sonarcloud.io/dashboard?id=vetrosound-graphql-service)
+
 ## Installation
 
 ```bash
